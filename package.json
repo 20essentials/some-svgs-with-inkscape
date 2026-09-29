@@ -10,7 +10,8 @@
     "check": "astro check",
     "thumbs": "node scripts/generate-thumbs.mjs",
     "thumbs:force": "node scripts/generate-thumbs.mjs --force",
-    "deploy": "pnpm build && pnpm gh-pages -d dist/"
+    "preview:shot": "node scripts/preview.mjs",
+    "deploy": "pnpm build && pnpm preview:shot && pnpm gh-pages -d dist/"
   },
   "dependencies": {
     "@astrojs/react": "^4.4.2",
