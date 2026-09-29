@@ -1,4 +1,4 @@
-import Threads from './Threads';
+import Threads from './threads';
 
 export const ContainerThreads = () => {
   return (
