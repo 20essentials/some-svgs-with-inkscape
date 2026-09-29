@@ -3,6 +3,10 @@ dist/
 .opencode/
 
 
+# generated thumbnails
+public/assets/*/*.webp
+
+
 # generated types
 .astro/
 

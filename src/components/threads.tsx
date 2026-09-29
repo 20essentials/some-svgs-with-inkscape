@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { Renderer, Program, Mesh, Triangle, Color } from 'ogl';
-import './threads.css';
 
 interface ThreadsProps {
+  className?: string;
   color?: [number, number, number];
   amplitude?: number;
   distance?: number;
@@ -31,7 +31,7 @@ uniform vec2 uMouse;
 
 #define PI 3.1415926538
 
-const int u_line_count = 40;
+const int u_line_count = 34;
 const float u_line_width = 7.0;
 const float u_line_blur = 10.0;
 
@@ -117,7 +117,11 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
         ));
     }
 
-    float colorVal = 1.0 - line_strength;
+    // Radial falloff keeps the weave densest behind the headline and lets it
+    // dissolve into the page before it reaches the viewport edges.
+    float vignette = smoothstep(1.05, 0.15, length(uv - vec2(0.5)) * 1.35);
+    float colorVal = pow(1.0 - line_strength, 1.35) * vignette;
+
     fragColor = vec4(uColor * colorVal, colorVal);
 }
 
@@ -126,21 +130,31 @@ void main() {
 }
 `;
 
+const MAX_DPR = 1.75;
+
 const Threads: React.FC<ThreadsProps> = ({
+  className,
   color = [1, 1, 1],
   amplitude = 1,
   distance = 0,
-  enableMouseInteraction = false,
-  ...rest
+  enableMouseInteraction = true
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const animationFrameId = useRef<number>(0);
+  const animationFrameId = useRef(0);
+  const isVisibleRef = useRef(true);
 
   useEffect(() => {
-    if (!containerRef.current) return;
     const container = containerRef.current;
+    if (!container) return;
 
-    const renderer = new Renderer({ alpha: true });
+    const reduceMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+
+    const renderer = new Renderer({
+      alpha: true,
+      dpr: Math.min(window.devicePixelRatio || 1, MAX_DPR)
+    });
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
     gl.enable(gl.BLEND);
@@ -154,7 +168,7 @@ const Threads: React.FC<ThreadsProps> = ({
       uniforms: {
         iTime: { value: 0 },
         iResolution: {
-          value: new Color(gl.canvas.width, gl.canvas.height, gl.canvas.width / gl.canvas.height)
+          value: new Color(1, 1, 1)
         },
         uColor: { value: new Color(...color) },
         uAmplitude: { value: amplitude },
@@ -165,65 +179,84 @@ const Threads: React.FC<ThreadsProps> = ({
 
     const mesh = new Mesh(gl, { geometry, program });
 
-    function resize() {
+    const resize = () => {
       const { clientWidth, clientHeight } = container;
       renderer.setSize(clientWidth, clientHeight);
       program.uniforms.iResolution.value.r = clientWidth;
       program.uniforms.iResolution.value.g = clientHeight;
       program.uniforms.iResolution.value.b = clientWidth / clientHeight;
-    }
-    window.addEventListener('resize', resize);
+    };
     resize();
+
+    const resizeObserver = new ResizeObserver(resize);
+    resizeObserver.observe(container);
 
     const currentMouse = [0.5, 0.5];
     let targetMouse = [0.5, 0.5];
 
-    function handleMouseMove(e: MouseEvent) {
+    const handlePointerMove = (event: PointerEvent) => {
       const rect = container.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width;
-      const y = 1.0 - (e.clientY - rect.top) / rect.height;
-      targetMouse = [x, y];
-    }
-    function handleMouseLeave() {
+      targetMouse = [
+        (event.clientX - rect.left) / rect.width,
+        1.0 - (event.clientY - rect.top) / rect.height
+      ];
+    };
+    const handlePointerLeave = () => {
       targetMouse = [0.5, 0.5];
-    }
-    if (enableMouseInteraction) {
-      container.addEventListener('mousemove', handleMouseMove);
-      container.addEventListener('mouseleave', handleMouseLeave);
+    };
+
+    if (enableMouseInteraction && !reduceMotion) {
+      container.addEventListener('pointermove', handlePointerMove);
+      container.addEventListener('pointerleave', handlePointerLeave);
     }
 
-    function update(t: number) {
+    // The hero scrolls away early: once it is offscreen the loop keeps its
+    // frame callback but stops writing uniforms and drawing.
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        isVisibleRef.current = entry.isIntersecting;
+      },
+      { rootMargin: '120px' }
+    );
+    visibilityObserver.observe(container);
+
+    const smoothing = 0.05;
+
+    const update = (time: number) => {
+      animationFrameId.current = requestAnimationFrame(update);
+
+      if (!isVisibleRef.current) return;
+
       if (enableMouseInteraction) {
-        const smoothing = 0.05;
         currentMouse[0] += smoothing * (targetMouse[0] - currentMouse[0]);
         currentMouse[1] += smoothing * (targetMouse[1] - currentMouse[1]);
         program.uniforms.uMouse.value[0] = currentMouse[0];
         program.uniforms.uMouse.value[1] = currentMouse[1];
-      } else {
-        program.uniforms.uMouse.value[0] = 0.5;
-        program.uniforms.uMouse.value[1] = 0.5;
       }
-      program.uniforms.iTime.value = t * 0.001;
 
+      program.uniforms.iTime.value = time * 0.001;
       renderer.render({ scene: mesh });
+    };
+
+    if (reduceMotion) {
+      program.uniforms.iTime.value = 8;
+      renderer.render({ scene: mesh });
+    } else {
       animationFrameId.current = requestAnimationFrame(update);
     }
-    animationFrameId.current = requestAnimationFrame(update);
 
     return () => {
       if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
-      window.removeEventListener('resize', resize);
-
-      if (enableMouseInteraction) {
-        container.removeEventListener('mousemove', handleMouseMove);
-        container.removeEventListener('mouseleave', handleMouseLeave);
-      }
+      resizeObserver.disconnect();
+      visibilityObserver.disconnect();
+      container.removeEventListener('pointermove', handlePointerMove);
+      container.removeEventListener('pointerleave', handlePointerLeave);
       if (container.contains(gl.canvas)) container.removeChild(gl.canvas);
       gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
   }, [color, amplitude, distance, enableMouseInteraction]);
 
-  return <div ref={containerRef} className="threads-container" {...rest} />;
+  return <div className={className} ref={containerRef} />;
 };
 
 export default Threads;

@@ -1,12 +1,16 @@
 ---
-import ContainerCards from '@/components/container-cards.astro';
-import { ContainerThreads } from '@/components/container-threads';
 import Hero from '@/components/hero.astro';
+import ProjectsGrid from '@/components/projects-grid.astro';
+import SiteFooter from '@/components/site-footer.astro';
+import SiteHeader from '@/components/site-header.astro';
 import Layout from '@/layouts/layout.astro';
 ---
 
 <Layout>
-  <ContainerThreads client:load />
-  <Hero />
-  <ContainerCards />
+  <SiteHeader />
+  <main>
+    <Hero />
+    <ProjectsGrid />
+  </main>
+  <SiteFooter />
 </Layout>

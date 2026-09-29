@@ -1,32 +1,128 @@
 ---
-import { baseUrl } from '@/utils/functions';
-import Title from './title.astro';
-const logo = baseUrl('/assets/inkscape.png');
+import HeroIntro from '@/components/hero-intro';
+import BorderBeam from '@/components/smoothui/border-beam';
+import Threads from '@/components/threads';
+import {
+  DESCRIPTION,
+  INKSCAPE_URL,
+  TOTAL_SVGS,
+  stats
+} from '@/utils/data';
+import { assetUrl } from '@/utils/functions';
+
+const logo = assetUrl('/assets/inkscape.png');
 ---
 
-<section class='am-hero'>
-  <a href='https://inkscape.org/'><img src={logo} alt='Logo' class='logo' /></a>
-  <Title />
+<section
+  class="grain relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-hero text-hero-foreground"
+  id="hero"
+>
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-0 -z-20 opacity-90"
+  >
+    <Threads
+      amplitude={1.15}
+      client:load
+      color={[0.42, 0.6, 1]}
+      className="size-full"
+    />
+  </div>
+
+  <div
+    aria-hidden="true"
+    class="grid-lines-inverse pointer-events-none absolute inset-0 -z-10 opacity-70"
+  >
+  </div>
+
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(115%_80%_at_50%_-10%,transparent_0%,var(--hero)_75%)]"
+  >
+  </div>
+
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-64 bg-[linear-gradient(to_top,var(--hero)_8%,transparent_100%)]"
+  >
+  </div>
+
+  <div
+    class="mx-auto flex w-full max-w-6xl flex-1 flex-col items-center justify-center gap-10 px-6 pt-24 pb-24 sm:gap-14 sm:px-8 sm:pt-28 sm:pb-28"
+  >
+    <BorderBeam
+      className="shrink-0"
+      client:load
+      colorFrom="#ffffff"
+      colorTo="var(--color-brand)"
+      duration={7}
+      radius={14}
+      size={90}
+    >
+      <a
+        class="flex items-center gap-2.5 rounded-[14px] border border-white/10 bg-white/[4%] px-3.5 py-2 backdrop-blur-md transition-colors duration-300 hover:bg-white/[9%]"
+        href={INKSCAPE_URL}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <img
+          alt="Inkscape logo"
+          class="size-6 rounded-md"
+          height="24"
+          loading="eager"
+          src={logo}
+          width="24"
+        />
+        <span class="font-mono text-[0.7rem] tracking-[0.18em] text-white/70 uppercase">
+          Drawn in Inkscape
+        </span>
+      </a>
+    </BorderBeam>
+
+    <HeroIntro
+      client:load
+      count={String(TOTAL_SVGS)}
+      eyebrow="Part 02 — Vector gallery"
+      headline="SVGs"
+      primaryHref="#projects"
+      primaryLabel="Browse the gallery"
+      secondaryHref={INKSCAPE_URL}
+      secondaryLabel="Get Inkscape"
+      subline="with Inkscape"
+      tagline={DESCRIPTION}
+    />
+
+    <dl
+      class="grid w-full max-w-2xl grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/[6%] backdrop-blur-md sm:grid-cols-4"
+    >
+      {
+        stats.map(({ label, value }) => (
+          <div class="flex flex-col items-center gap-1 bg-hero/60 px-4 py-4 text-center">
+            <dt class="font-mono text-[0.65rem] tracking-[0.2em] text-white/45 uppercase">
+              {label}
+            </dt>
+            <dd class="font-display text-xl font-medium tracking-tight text-white">
+              {value}
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+
+  <a
+    aria-label="Scroll to the projects"
+    class="group absolute inset-x-0 bottom-6 mx-auto flex w-fit flex-col items-center gap-2 text-white/40 transition-colors duration-300 hover:text-white"
+    href="#projects"
+  >
+    <span class="font-mono text-[0.62rem] tracking-[0.28em] uppercase">Scroll</span>
+    <span
+      aria-hidden="true"
+      class="grid h-8 w-5 place-items-start overflow-hidden rounded-full border border-current pt-1.5"
+    >
+      <span
+        class="block size-1 rounded-full bg-current transition-transform duration-500 ease-out group-hover:translate-y-3"
+      />
+    </span>
+  </a>
 </section>
-
-<style>
-  .am-hero {
-    height: 100vh;
-    position: relative;
-    overflow: hidden;
-    background: var(--bg);
-    font-family: 'Open Sans', sans-serif;
-    touch-action: pan-y;
-    cursor: pointer;
-  }
-
-  img.logo {
-    position: absolute;
-    right: 1.5vmax;
-    bottom: 1.5vmax;
-    width: 6vmax;
-    object-fit: cover;
-    border-radius: 50%;
-    z-index: 10000;
-  }
-</style>

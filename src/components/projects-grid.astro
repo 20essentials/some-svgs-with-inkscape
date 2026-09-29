@@ -1,0 +1,484 @@
+---
+import {
+  CREDIT,
+  INKSCAPE_URL,
+  REPO_URL,
+  THUMB_SIZE,
+  TOTAL_SVGS,
+  projects
+} from '@/utils/data';
+---
+
+<section class="relative isolate overflow-hidden" id="projects">
+  <div
+    aria-hidden="true"
+    class="grid-lines pointer-events-none absolute inset-0 -z-10 opacity-40"
+  >
+  </div>
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96 bg-[radial-gradient(70%_60%_at_50%_0%,color-mix(in_oklab,var(--brand)_10%,transparent),transparent_100%)]"
+  >
+  </div>
+
+  <div class="mx-auto w-full max-w-[110rem] px-5 py-24 sm:px-8 sm:py-32">
+    <header
+      class="grid gap-8 border-b border-border/70 pb-10 lg:grid-cols-[1.1fr_1fr] lg:items-end lg:gap-16"
+    >
+      <div class="flex flex-col gap-4">
+        <p
+          class="inline-flex w-fit items-center gap-2 rounded-full border border-border/80 bg-card px-3 py-1 font-mono text-[0.65rem] tracking-[0.22em] text-muted-foreground uppercase"
+        >
+          <span class="size-1.5 rounded-full bg-[var(--color-brand)]"></span>
+          The collection
+        </p>
+        <h2
+          class="font-display text-[clamp(2rem,5.5vw,3.75rem)] leading-[1.02] font-semibold tracking-[-0.04em]"
+        >
+          Every vector,<br />one wall.
+        </h2>
+      </div>
+
+      <div class="flex flex-col gap-6">
+        <p
+          class="max-w-[52ch] text-pretty text-[0.975rem] leading-relaxed text-muted-foreground sm:text-base"
+        >
+          Logos, icons and illustrations exported straight from their source
+          files — no rasterisation, no compression artefacts. Open any tile to
+          grab the raw SVG.
+        </p>
+        <div
+          class="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-muted-foreground"
+        >
+          <span class="font-display text-2xl font-semibold tracking-tight text-foreground numeric">
+            {TOTAL_SVGS}
+          </span>
+          <span class="-ml-4 hidden h-4 w-px bg-border sm:block"></span>
+          <a
+            class="group inline-flex items-center gap-1.5 underline-offset-4 transition-colors hover:text-foreground hover:underline"
+            href={INKSCAPE_URL}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Inkscape
+            <svg
+              aria-hidden="true"
+              class="size-3.5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path d="M7 17 17 7"></path>
+              <path d="M7 7h10v10"></path>
+            </svg>
+          </a>
+          <a
+            class="group inline-flex items-center gap-1.5 underline-offset-4 transition-colors hover:text-foreground hover:underline"
+            href={REPO_URL}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Source
+            <svg
+              aria-hidden="true"
+              class="size-3.5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path d="M7 17 17 7"></path>
+              <path d="M7 7h10v10"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <ul class="wall mt-10 sm:mt-14" data-wall>
+      {
+        projects.map(({ id, label, url, thumb }, index) => (
+          <li class="card" style={`--i:${index}`}>
+            <a
+              aria-label={`Open SVG ${id} in a new tab`}
+              class="card-link group block"
+              href={url}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <span class="card-paper">
+                <img
+                  alt={`Vector artwork ${label}`}
+                  class="card-art"
+                  decoding="async"
+                  height={THUMB_SIZE}
+                  loading="lazy"
+                  src={thumb}
+                  width={THUMB_SIZE}
+                />
+              </span>
+
+              <span aria-hidden="true" class="card-glare"></span>
+
+              <span aria-hidden="true" class="card-index numeric">
+                {label}
+              </span>
+
+              <span aria-hidden="true" class="card-open">
+                <svg
+                  class="size-3.5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M7 17 17 7"></path>
+                  <path d="M7 7h10v10"></path>
+                </svg>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <footer
+      class="mt-14 flex flex-col gap-3 border-t border-border/70 pt-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p>
+        Every file is part of the
+        <a
+          class="underline underline-offset-4 transition-colors hover:text-foreground"
+          href={REPO_URL}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          open source collection
+        </a>, released under the MIT license.
+      </p>
+      <p>
+        Artwork by
+        <a
+          class="underline underline-offset-4 transition-colors hover:text-foreground"
+          href={CREDIT.href}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          {CREDIT.name}
+        </a>
+      </p>
+    </footer>
+  </div>
+</section>
+
+<style>
+  .wall {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr));
+    gap: clamp(0.55rem, 1.1vw, 1.05rem);
+  }
+
+  /* The entrance state only exists while the observer below can undo it.
+     Scoped to `:not(.is-in)` so it can never outrank `.card.is-in`. */
+  :global(html.js) .card:not(.is-in) {
+    opacity: 0;
+    transform: translateY(22px) scale(0.965);
+  }
+
+  .card {
+    /* 146 tiles is a lot of layout and paint to hold in the document at once.
+       Off-screen cards are skipped and measured from the last real size, so
+       scrolling only ever renders the handful of rows on screen. */
+    content-visibility: auto;
+    contain-intrinsic-size: auto 200px;
+    transition:
+      opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: calc((var(--i) % 5) * 55ms);
+  }
+
+  /* Only the hovered card needs 3D. Leaving `perspective` on all 146 cards
+     gave every one of them its own stacking context for nothing. */
+  .card:has(.card-link:hover) {
+    perspective: 900px;
+  }
+
+  .card.is-in {
+    opacity: 1;
+    transform: none;
+  }
+
+  .card-link {
+    --tilt-x: 0deg;
+    --tilt-y: 0deg;
+    position: relative;
+    display: block;
+    border-radius: var(--radius-lg);
+    isolation: isolate;
+    transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+    transition:
+      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow:
+      0 1px 1px oklch(0 0 0 / 0.04),
+      0 6px 16px -10px oklch(0 0 0 / 0.25);
+  }
+
+  .card-paper {
+    display: grid;
+    aspect-ratio: 1;
+    place-items: center;
+    overflow: hidden;
+    padding: clamp(0.85rem, 16%, 2rem);
+    border-radius: inherit;
+    border: 1px solid var(--border);
+    background-color: var(--paper);
+    background-image: radial-gradient(
+      120% 100% at 50% 0%,
+      #fff 0%,
+      var(--paper) 70%
+    );
+    transition: border-color 0.4s ease-out;
+  }
+
+  .card-art {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0.82;
+    transition:
+      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.4s ease-out;
+  }
+
+  .card-glare {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+    opacity: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      22rem circle at
+        calc(50% + var(--rx, 0) * 100%) calc(50% + var(--ry, 0) * 100%),
+      color-mix(in oklab, var(--brand) 26%, white 74%) 0%,
+      transparent 62%
+    );
+    transition: opacity 0.35s ease-out;
+  }
+
+  .card-index {
+    position: absolute;
+    bottom: 0.6rem;
+    left: 0.7rem;
+    z-index: 2;
+    border-radius: 999px;
+    padding: 0.15rem 0.5rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    color: oklch(0.45 0.02 270);
+    background-color: oklch(1 0 0 / 0.72);
+    opacity: 0;
+    transform: translateY(4px);
+    transition:
+      opacity 0.3s ease-out,
+      transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .card-open {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    z-index: 2;
+    display: grid;
+    width: 1.75rem;
+    height: 1.75rem;
+    place-items: center;
+    border-radius: 999px;
+    color: #fff;
+    background-color: var(--brand);
+    box-shadow: 0 4px 12px -4px color-mix(in oklab, var(--brand) 70%, black);
+    opacity: 0;
+    transform: scale(0.7) translateY(-4px);
+    transition:
+      opacity 0.3s ease-out,
+      transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .card-link:hover .card-paper,
+  .card-link:focus-visible .card-paper {
+    border-color: color-mix(in oklab, var(--brand) 45%, var(--border));
+  }
+
+  .card-link:hover .card-art,
+  .card-link:focus-visible .card-art {
+    opacity: 1;
+    transform: scale(1.055);
+  }
+
+  .card-link:hover .card-glare,
+  .card-link:focus-visible .card-glare {
+    opacity: 0.85;
+  }
+
+  .card-link:hover .card-index,
+  .card-link:focus-visible .card-index {
+    /* The blur is the most expensive paint in the tile, and the chip is
+       invisible until hover — so it only exists on the one card being read. */
+    backdrop-filter: blur(6px);
+    opacity: 1;
+    transform: none;
+  }
+
+  .card-link:hover .card-open,
+  .card-link:focus-visible .card-open {
+    opacity: 1;
+    transform: none;
+  }
+
+  .card-link:hover,
+  .card-link:focus-visible {
+    box-shadow:
+      0 2px 4px oklch(0 0 0 / 0.06),
+      0 24px 48px -22px color-mix(in oklab, var(--brand) 55%, black);
+    z-index: 2;
+  }
+
+  /* Pointer-driven tilt only where a real cursor exists. `--rx` / `--ry` are
+     written onto the card by the delegated listener below, and inherit here. */
+  @media (hover: hover) and (pointer: fine) {
+    .card-link:hover {
+      --tilt-x: calc(var(--ry, 0) * -7deg);
+      --tilt-y: calc(var(--rx, 0) * 7deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card,
+    .card-link,
+    .card-art,
+    .card-glare,
+    .card-index,
+    .card-open {
+      transition-duration: 0.01ms !important;
+      transition-delay: 0ms !important;
+    }
+
+    :global(html.js) .card:not(.is-in) {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  const wall = document.querySelector<HTMLElement>('[data-wall]');
+
+  if (wall) {
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const cards = [...wall.querySelectorAll<HTMLElement>('.card')];
+    const pending = new Set(cards);
+
+    let observer: IntersectionObserver | undefined;
+
+    const reveal = (card: HTMLElement) => {
+      pending.delete(card);
+      observer?.unobserve(card);
+      card.classList.add('is-in');
+    };
+
+    if (reduced) {
+      for (const card of cards) reveal(card);
+    } else {
+      observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) reveal(entry.target as HTMLElement);
+          }
+        },
+        { rootMargin: '0px 0px -8% 0px', threshold: 0.01 }
+      );
+
+      for (const card of cards) observer.observe(card);
+
+      /* The observer only reports a change in intersection ratio, so a fast
+         jump — End key, an anchor link, restored scroll position — can carry a
+         tile straight past the root without ever firing. Sweep the remainder so
+         nothing is left stranded at opacity 0, but only a few times a second:
+         each pending card costs a layout read. */
+      let queued = false;
+      let lastSweep = 0;
+
+      const onScroll = () => {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(() => {
+          queued = false;
+          if (!pending.size) {
+            window.removeEventListener('scroll', onScroll);
+            return;
+          }
+          const now = performance.now();
+          if (now - lastSweep < 250) return;
+          lastSweep = now;
+          for (const card of [...pending]) {
+            if (card.getBoundingClientRect().top < window.innerHeight) reveal(card);
+          }
+        });
+      };
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+    }
+
+    // One delegated listener for the whole wall, and one layout read per hover
+    // rather than one per pointer event. The CSS transition does the smoothing.
+    const cardFrom = (target: EventTarget | null) =>
+      target instanceof Element ? target.closest<HTMLElement>('.card') : null;
+
+    let active: HTMLElement | undefined;
+    let box: DOMRect | undefined;
+
+    wall.addEventListener('pointermove', (event) => {
+      if (event.pointerType !== 'mouse') return;
+      const card = cardFrom(event.target);
+      if (!card) return;
+      // The cached rect belongs to `active` only, and a scroll drops it.
+      if (card !== active || !box) {
+        active = card;
+        box = card.getBoundingClientRect();
+      }
+
+      card.style.setProperty('--rx', ((event.clientX - box.left) / box.width - 0.5).toFixed(4));
+      card.style.setProperty('--ry', ((event.clientY - box.top) / box.height - 0.5).toFixed(4));
+    });
+
+    wall.addEventListener('pointerout', (event) => {
+      const card = cardFrom(event.target);
+      const next = cardFrom(event.relatedTarget);
+      if (!card || card === next) return;
+      card.style.setProperty('--rx', '0');
+      card.style.setProperty('--ry', '0');
+      if (card === active) {
+        active = undefined;
+        box = undefined;
+      }
+    });
+
+    // Scrolling moves the tiles under a stationary cursor, so the cached rect
+    // no longer describes the card the pointer is over.
+    window.addEventListener(
+      'scroll',
+      () => {
+        box = undefined;
+      },
+      { passive: true }
+    );
+  }
+</script>

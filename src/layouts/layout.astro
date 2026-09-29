@@ -1,37 +1,107 @@
 ---
-const title = TITLE;
 import '@/styles/global.css';
-import { TITLE } from '@/utils/data';
-import { baseUrl } from '@/utils/functions';
-const favicon = baseUrl('/assets/favicon.webp');
+import { AUTHOR, DESCRIPTION, TITLE } from '@/utils/data';
+import { absoluteUrl, assetUrl } from '@/utils/functions';
+
+const favicon = assetUrl('/assets/favicon.webp');
+const canonical = absoluteUrl('/');
 ---
+
 <!doctype html>
 <html lang='en'>
   <head>
     <meta charset='UTF-8' />
-    <meta name='viewport' content='width=device-width' />
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <meta name='generator' content={Astro.generator} />
     <link rel='icon' type='image/svg+xml' href={favicon} />
     <meta name='google' content='notranslate' />
+
+    <title>{TITLE}</title>
+    <meta name='description' content={DESCRIPTION} />
+    <link rel='canonical' href={canonical} />
+    <meta name='author' content={AUTHOR} />
+
+    <meta property='og:type' content='website' />
+    <meta property='og:title' content={TITLE} />
+    <meta property='og:description' content={DESCRIPTION} />
+    <meta property='og:url' content={canonical} />
+    <meta property='og:image' content={absoluteUrl('/assets/favicon.webp')} />
+    <meta name='twitter:card' content='summary_large_image' />
+
     <link rel='preconnect' href='https://fonts.googleapis.com' />
-    <link
-      rel='preconnect'
-      href='https://fonts.gstatic.com'
-      crossorigin
-    />
+    <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
     <link
       rel='stylesheet'
-      href='https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap'
+      href='https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Inter:wght@100..900&display=swap'
     />
-    <title>{title}</title>
+
     <script is:inline>
-      const stored = localStorage.getItem('theme');
-      const dark = stored
-        ? stored === 'dark'
-        : matchMedia('(prefers-color-scheme: dark)').matches;
-      document.documentElement.classList.toggle('dark', dark);
+      (() => {
+        document.documentElement.classList.add('js');
+
+        const stored = localStorage.getItem('theme');
+        const theme =
+          stored === 'light' || stored === 'dark' ? stored : 'system';
+        const dark =
+          theme === 'dark' ||
+          (theme === 'system' &&
+            matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.classList.toggle('dark', dark);
+        document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
+      })();
     </script>
   </head>
   <body>
+    <a
+      class="sr-only rounded-full bg-[var(--brand)] px-4 py-2 text-white focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-70"
+      href='#projects'
+    >
+      Skip to the gallery
+    </a>
     <slot />
+    <a
+      class="fixed right-4 bottom-4 z-50 grid size-11 place-items-center rounded-full border border-border bg-card/80 shadow-lg backdrop-blur-xl transition-[transform,opacity] duration-500 hover:-translate-y-0.5 sm:right-6 sm:bottom-6"
+      data-to-top
+      href='#hero'
+      aria-label='Back to top'
+      inert
+    >
+      <svg
+        aria-hidden='true'
+        class='size-4'
+        fill='none'
+        stroke='currentColor'
+        stroke-linecap='round'
+        stroke-linejoin='round'
+        stroke-width='2'
+        viewBox='0 0 24 24'
+      >
+        <path d='M12 19V5'></path>
+        <path d='m5 12 7-7 7 7'></path>
+      </svg>
+    </a>
   </body>
 </html>
+
+<style>
+  [data-to-top] {
+    opacity: 0;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  const toTop = document.querySelector<HTMLElement>('[data-to-top]');
+
+  if (toTop) {
+    const sync = () => {
+      const visible = window.scrollY > window.innerHeight * 0.9;
+      toTop.style.opacity = visible ? '1' : '0';
+      toTop.style.pointerEvents = visible ? 'auto' : 'none';
+      toTop.toggleAttribute('inert', !visible);
+    };
+
+    sync();
+    addEventListener('scroll', sync, { passive: true });
+  }
+</script>

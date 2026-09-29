@@ -1,0 +1,106 @@
+---
+import ScrollProgress from '@/components/smoothui/scroll-progress';
+import ThemeToggle from '@/components/theme-toggle';
+import { AUTHOR, INKSCAPE_URL, REPO_URL } from '@/utils/data';
+import { assetUrl } from '@/utils/functions';
+
+const logo = assetUrl('/assets/inkscape.png');
+---
+
+<div
+  aria-hidden="true"
+  class="pointer-events-none fixed inset-x-0 top-0 z-60"
+>
+  <ScrollProgress client:load thickness={2} variant="bar" />
+</div>
+
+<header
+  class="fixed inset-x-0 top-0 z-50 px-4 pt-4 transition-[transform,opacity,visibility] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:px-6"
+  data-site-header
+  inert
+>
+  <nav
+    aria-label="Main"
+    class="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 rounded-full border border-border/70 bg-card/70 px-3 py-2 shadow-sm backdrop-blur-xl transition-opacity duration-300"
+  >
+    <a
+      class="group flex items-center gap-2.5 rounded-full pr-2 pl-1.5"
+      href="#hero"
+    >
+      <span
+        class="grid size-7 place-items-center rounded-full bg-[var(--hero)] ring-1 ring-white/10"
+      >
+        <img
+          alt=""
+          aria-hidden="true"
+          class="size-3.5"
+          height="14"
+          src={logo}
+          width="14"
+        />
+      </span>
+      <span
+        class="font-display text-[0.95rem] font-semibold tracking-[-0.02em]"
+      >
+        {AUTHOR}
+      </span>
+    </a>
+
+    <div class="flex items-center gap-1 sm:gap-2">
+      <a
+        class="hidden rounded-full px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground sm:inline-block"
+        href={INKSCAPE_URL}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        Inkscape
+      </a>
+      <a
+        class="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+        href={REPO_URL}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <span class="hidden sm:inline">Source</span>
+        <svg
+          aria-hidden="true"
+          class="size-3.5"
+          fill="none"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+        >
+          <path d="M7 17 17 7"></path>
+          <path d="M7 7h10v10"></path>
+        </svg>
+      </a>
+      <span
+        aria-hidden="true"
+        class="mx-1 hidden h-5 w-px bg-border sm:block"
+      >
+      </span>
+      <ThemeToggle client:load />
+    </div>
+  </nav>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-site-header]');
+
+  if (header) {
+    // The bar only earns its screen space once the hero is behind us. While it
+    // is parked off-screen it stays `inert`, so its links are not tabbable.
+    const sync = () => {
+      const scrolled = window.scrollY > 120;
+      header.style.transform = scrolled ? 'translateY(0)' : 'translateY(-160%)';
+      header.style.opacity = scrolled ? '1' : '0';
+      header.style.visibility = scrolled ? 'visible' : 'hidden';
+      header.toggleAttribute('inert', !scrolled);
+    };
+
+    sync();
+    addEventListener('scroll', sync, { passive: true });
+  }
+</script>
