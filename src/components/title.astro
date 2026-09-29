@@ -20,6 +20,21 @@ import gsap from 'gsap';
 </script>
 
 <style is:global>
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 800;
+    font-stretch: 100%;
+    font-display: swap;
+    src: url('/assets/open-sans.woff2') format('woff2');
+  }
+
+  .am-hero h2 {
+    font-family: 'Open Sans', sans-serif, system-ui, -apple-system,
+      BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+      'Helvetica Neue';
+  }
+
   @property --hue {
     inherits: false;
     initial-value: 0;

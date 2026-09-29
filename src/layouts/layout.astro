@@ -12,7 +12,24 @@ const favicon = baseUrl('/assets/favicon.webp');
     <meta name='viewport' content='width=device-width' />
     <link rel='icon' type='image/svg+xml' href={favicon} />
     <meta name='google' content='notranslate' />
+    <link rel='preconnect' href='https://fonts.googleapis.com' />
+    <link
+      rel='preconnect'
+      href='https://fonts.gstatic.com'
+      crossorigin
+    />
+    <link
+      rel='stylesheet'
+      href='https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap'
+    />
     <title>{title}</title>
+    <script is:inline>
+      const stored = localStorage.getItem('theme');
+      const dark = stored
+        ? stored === 'dark'
+        : matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.classList.toggle('dark', dark);
+    </script>
   </head>
   <body>
     <slot />
