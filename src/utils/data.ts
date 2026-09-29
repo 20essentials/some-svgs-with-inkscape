@@ -2,14 +2,14 @@ import { assetUrl } from './functions';
 
 export const TOTAL_SVGS = 146;
 
-export const TITLE = `${TOTAL_SVGS} SVGs with Inkscape — Part 2`;
+export const TITLE = `${TOTAL_SVGS} SVGs with Inkscape`;
 
 export const DESCRIPTION =
   'A curated gallery of vector artwork drawn with Inkscape: logos, icons and illustrations, exported straight from the source SVGs.';
 
 export const AUTHOR = '20essentials';
 
-export const REPO_URL = 'https://github.com/20essentials/some-svgs-with-inkscape-part-2';
+export const REPO_URL = 'https://github.com/20essentials/some-svgs-with-inkscape';
 
 export const INKSCAPE_URL = 'https://inkscape.org/';
 
