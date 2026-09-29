@@ -1,6 +1,5 @@
 ---
 import {
-  CREDIT,
   INKSCAPE_URL,
   REPO_URL,
   THUMB_SIZE,
@@ -148,33 +147,6 @@ import {
         ))
       }
     </ul>
-
-    <footer
-      class="mt-14 flex flex-col gap-3 border-t border-border/70 pt-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between"
-    >
-      <p>
-        Every file is part of the
-        <a
-          class="underline underline-offset-4 transition-colors hover:text-foreground"
-          href={REPO_URL}
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          open source collection
-        </a>, released under the MIT license.
-      </p>
-      <p>
-        Artwork by
-        <a
-          class="underline underline-offset-4 transition-colors hover:text-foreground"
-          href={CREDIT.href}
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          {CREDIT.name}
-        </a>
-      </p>
-    </footer>
   </div>
 </section>
 
