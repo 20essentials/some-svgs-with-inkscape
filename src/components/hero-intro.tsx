@@ -60,13 +60,13 @@ export default function HeroIntro({
         {eyebrow}
       </motion.p>
 
-      <h1 className="flex flex-col items-center text-balance">
+      <h1 className="flex flex-col items-center text-balance p-0.5">
         <span className="sr-only">
           {count} {headline} {subline}
         </span>
         <span
           aria-hidden="true"
-          className="font-display block bg-gradient-to-b from-white via-white to-white/55 bg-clip-text text-[clamp(2.75rem,12vw,10rem)] leading-[0.86] font-semibold tracking-[-0.05em] text-transparent"
+          className="font-display block bg-gradient-to-b from-white via-white to-white/55 bg-clip-text text-[clamp(2.75rem,12vw,10rem)] leading-[0.86] font-semibold tracking-[-0.05em] text-transparent p-2"
         >
           <PerCharacterRise delay={200} stagger={26}>
             {`${count} ${headline}`}
