@@ -1,6 +1,7 @@
 # build output
 dist/
 .opencode/
+AGENTS.md
 
 
 # generated thumbnails
