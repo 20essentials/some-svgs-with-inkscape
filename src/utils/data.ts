@@ -1,6 +1,6 @@
 import { assetUrl } from './functions';
 
-export const TOTAL_SVGS = 154;
+export const TOTAL_SVGS = 156;
 
 export const TITLE = `${TOTAL_SVGS} SVGs with Inkscape`;
 
